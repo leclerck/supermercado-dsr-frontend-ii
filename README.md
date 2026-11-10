@@ -28,6 +28,14 @@ npm run build
 npm run preview
 ```
 
+## Deploy en GitHub Pages
+
+El proyecto usa `base: '/supermercado-dsr-frontend-ii/'` en Vite y `basename` en React Router.
+
+1. En el repo de GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. Hacé push a `main` (o ejecutá el workflow manualmente). El workflow `.github/workflows/deploy-pages.yml` corre `npm ci`, `npm run build` y publica la carpeta `dist` (no hace falta versionarla).
+3. El sitio queda en `https://leclerck.github.io/supermercado-dsr-frontend-ii/`.
+
 ## Rutas
 
 | Ruta | Descripción |

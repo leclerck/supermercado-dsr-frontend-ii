@@ -15,7 +15,7 @@ function App() {
   return (
     <InventoryProvider>
       <CartProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/supermercado-dsr-frontend-ii">
           <div className="mx-auto min-h-screen max-w-5xl px-4 pb-24 pt-6">
             <Routes>
               <Route path="/" element={<Home />} />
