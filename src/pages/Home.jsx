@@ -23,7 +23,7 @@ export default function Home() {
         >
           <h2 className="text-lg font-semibold text-slate-900">Ver inventario</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Listado de productos con filtro por categoría.
+            Cards de productos con stock, filtro por categoría y detalle.
           </p>
         </Link>
         <Link

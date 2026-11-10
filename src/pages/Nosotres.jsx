@@ -19,7 +19,7 @@ const sucursales = [
   },
 ]
 
-export default function Nosotros() {
+export default function Nosotres() {
   return (
     <section className="space-y-6">
       <header>
@@ -36,7 +36,7 @@ export default function Nosotros() {
             <span className="font-medium">Email:</span> contacto@supermercado.com
           </li>
           <li>
-            <span className="font-medium">Teléfono:</span> (011) 4000-1234
+            <span className="font-medium">Teléfono:</span> 2 4000-1234
           </li>
           <li>
             <span className="font-medium">Atención al cliente:</span> Lun a Vie 9:00 a 18:00

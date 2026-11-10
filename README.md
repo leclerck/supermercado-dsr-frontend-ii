@@ -1,6 +1,6 @@
 # Supermercado — Gestión de Inventario
 
-Aplicación web básica de gestión de inventario para un supermercado, construida con **React**, **Vite**, **React Router** y **Tailwind CSS**. La interfaz está en español y el inventario se maneja en memoria con estado global (sin backend).
+Aplicación web básica de gestión de inventario y carrito para un supermercado, construida con **React**, **Vite**, **React Router** y **Tailwind CSS**. La interfaz está en español y los datos se manejan en memoria con estado global (sin backend).
 
 ## Requisitos
 
@@ -33,12 +33,14 @@ npm run preview
 | Ruta | Descripción |
 |------|-------------|
 | `/` | Página de inicio |
-| `/inventario` | Tabla de productos con filtro dinámico por categoría |
+| `/inventario` | Cards de productos con filtro por categoría y stock disponible |
+| `/producto/:id` | Detalle del producto y botón para agregar al carrito |
 | `/productos` | Formulario CRUD de productos |
-| `/nosotros` | Sucursales y datos de contacto |
+| `/carrito` | Lista del carrito; permite modificar cantidades |
+| `/nosotres` | Sucursales y datos de contacto |
 | `/faq` | Preguntas frecuentes |
 
-La navegación se realiza con el menú inferior fijo.
+La navegación principal usa el menú inferior fijo. El ícono flotante del carrito abre `/carrito` y muestra la cantidad de unidades.
 
 ## Modelo de producto
 
@@ -48,21 +50,62 @@ Cada producto tiene:
 - `nombre` — nombre del producto
 - `marca` — marca
 - `categoria` — categoría (por ejemplo Lácteos, Bebidas, Abarrotes)
+- `precio` — precio unitario
+- `cantidad` — stock disponible en inventario
+
+## Carrito y stock
+
+- Al **agregar al carrito**, se resta la cantidad del stock del inventario.
+- Al **aumentar** la cantidad en el carrito, se resta más stock (sin superar lo disponible).
+- Al **disminuir** o **quitar** un ítem, el stock vuelve al inventario.
+- Si se **elimina** un producto desde el CRUD, también se limpia del carrito (sin restaurar stock).
+
+### Componentes del carrito
+
+| Archivo | Rol |
+|---------|-----|
+| `src/context/CartContext.jsx` | Estado global del carrito y sincronización con el stock |
+| `src/components/CartFab.jsx` | Botón flotante con badge de unidades; abre `/carrito` |
+| `src/pages/Carrito.jsx` | Lista editable del carrito (cantidad, quitar, totales) |
+| `src/pages/ProductoDetalle.jsx` | Detalle + “Agregar al carrito” |
+| `src/components/ProductCard.jsx` | Card clickeable en el inventario |
+
+### API de `useCart()`
+
+| Valor / método | Descripción |
+|----------------|-------------|
+| `items` | Ítems crudos `{ productId, cantidad }` |
+| `cartLines` | Ítems unidos al producto + `subtotal` |
+| `totalItems` | Suma de unidades (badge del FAB) |
+| `totalPrice` | Total a pagar |
+| `addToCart(id, qty)` | Agrega unidades y resta stock |
+| `setCartQuantity(id, qty)` | Define cantidad exacta y ajusta stock |
+| `removeFromCart(id)` | Quita el ítem y restaura stock |
+| `purgeFromCart(id)` | Quita el ítem sin restaurar stock |
+| `getCartQuantity(id)` | Unidades actuales de un producto en el carrito |
 
 ## Estado global
 
-El inventario vive en `InventoryContext` (`src/context/InventoryContext.jsx`) con `useReducer`. Las páginas de Inventario y Productos usan el hook `useInventory` para leer y modificar los datos. Los cambios no se persisten: al recargar la página se restauran los datos iniciales de ejemplo.
+- Inventario: `InventoryContext` (`src/context/InventoryContext.jsx`) con `useReducer`.
+- Carrito: `CartContext` (`src/context/CartContext.jsx`), anidado dentro del provider de inventario.
+
+Los cambios no se persisten: al recargar la página se restauran los datos iniciales de ejemplo.
 
 ## Estructura del proyecto
 
 ```
 src/
-  components/BottomNav.jsx   # Menú inferior de navegación
+  components/BottomNav.jsx
+  components/CartFab.jsx
+  components/ProductCard.jsx
   context/InventoryContext.jsx
+  context/CartContext.jsx
   pages/Home.jsx
   pages/Inventario.jsx
+  pages/ProductoDetalle.jsx
   pages/Productos.jsx
-  pages/Nosotros.jsx
+  pages/Carrito.jsx
+  pages/Nosotres.jsx
   pages/Faq.jsx
   App.jsx
   main.jsx

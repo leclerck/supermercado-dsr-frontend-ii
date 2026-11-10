@@ -1,14 +1,18 @@
 import { useState } from 'react'
+import { useCart } from '../context/CartContext'
 import { useInventory } from '../context/InventoryContext'
 
 const emptyForm = {
   nombre: '',
   marca: '',
   categoria: '',
+  precio: '',
+  cantidad: '',
 }
 
 export default function Productos() {
   const { products, addProduct, updateProduct, deleteProduct } = useInventory()
+  const { purgeFromCart } = useCart()
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState(null)
 
@@ -28,15 +32,28 @@ export default function Productos() {
     const nombre = form.nombre.trim()
     const marca = form.marca.trim()
     const categoria = form.categoria.trim()
+    const precio = Number(form.precio)
+    const cantidad = Number(form.cantidad)
 
     if (!nombre || !marca || !categoria) {
       return
     }
+    if (Number.isNaN(precio) || precio < 0 || Number.isNaN(cantidad) || cantidad < 0) {
+      return
+    }
+
+    const payload = {
+      nombre,
+      marca,
+      categoria,
+      precio,
+      cantidad: Math.floor(cantidad),
+    }
 
     if (editingId !== null) {
-      updateProduct({ id: editingId, nombre, marca, categoria })
+      updateProduct({ id: editingId, ...payload })
     } else {
-      addProduct({ nombre, marca, categoria })
+      addProduct(payload)
     }
 
     resetForm()
@@ -48,6 +65,8 @@ export default function Productos() {
       nombre: product.nombre,
       marca: product.marca,
       categoria: product.categoria,
+      precio: String(product.precio),
+      cantidad: String(product.cantidad),
     })
   }
 
@@ -55,6 +74,7 @@ export default function Productos() {
     if (editingId === id) {
       resetForm()
     }
+    purgeFromCart(id)
     deleteProduct(id)
   }
 
@@ -64,7 +84,7 @@ export default function Productos() {
         <h1 className="text-2xl font-bold text-slate-900">Gestión de productos</h1>
         <p className="mt-1 text-slate-600">
           Crea, edita o elimina productos del inventario (sin backend).
-        </p>  
+        </p>
       </header>
 
       <form
@@ -75,7 +95,7 @@ export default function Productos() {
           {editingId !== null ? 'Editar producto' : 'Nuevo producto'}
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="nombre">
               Nombre
@@ -118,6 +138,40 @@ export default function Productos() {
               required
             />
           </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="precio">
+              Precio
+            </label>
+            <input
+              id="precio"
+              name="precio"
+              type="number"
+              min="0"
+              step="1"
+              value={form.precio}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+              placeholder="Ej. 1890"
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="cantidad">
+              Cantidad
+            </label>
+            <input
+              id="cantidad"
+              name="cantidad"
+              type="number"
+              min="0"
+              step="1"
+              value={form.cantidad}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+              placeholder="Ej. 40"
+              required
+            />
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -146,13 +200,15 @@ export default function Productos() {
               <th className="px-4 py-3 font-semibold text-slate-700">Nombre</th>
               <th className="px-4 py-3 font-semibold text-slate-700">Marca</th>
               <th className="px-4 py-3 font-semibold text-slate-700">Categoría</th>
+              <th className="px-4 py-3 font-semibold text-slate-700">Precio</th>
+              <th className="px-4 py-3 font-semibold text-slate-700">Cantidad</th>
               <th className="px-4 py-3 font-semibold text-slate-700">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-slate-500">
                   No hay productos. Agregá el primero con el formulario.
                 </td>
               </tr>
@@ -162,6 +218,10 @@ export default function Productos() {
                   <td className="px-4 py-3 text-slate-900">{product.nombre}</td>
                   <td className="px-4 py-3 text-slate-600">{product.marca}</td>
                   <td className="px-4 py-3 text-slate-600">{product.categoria}</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    ${product.precio.toLocaleString('es-CL')}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">{product.cantidad}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button

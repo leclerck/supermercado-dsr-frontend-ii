@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import ProductCard from '../components/ProductCard'
 import { useInventory } from '../context/InventoryContext'
 
 export default function Inventario() {
@@ -23,7 +24,7 @@ export default function Inventario() {
       <header>
         <h1 className="text-2xl font-bold text-slate-900">Inventario</h1>
         <p className="mt-1 text-slate-600">
-          Listado de productos disponibles. Filtra por categoría.
+          Productos disponibles. Toca una card para ver el detalle y agregar al carrito.
         </p>
       </header>
 
@@ -46,34 +47,17 @@ export default function Inventario() {
         </select>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-4 py-3 font-semibold text-slate-700">Nombre</th>
-              <th className="px-4 py-3 font-semibold text-slate-700">Marca</th>
-              <th className="px-4 py-3 font-semibold text-slate-700">Categoría</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {productosFiltrados.length === 0 ? (
-              <tr>
-                <td colSpan={3} className="px-4 py-8 text-center text-slate-500">
-                  No hay productos para mostrar.
-                </td>
-              </tr>
-            ) : (
-              productosFiltrados.map((product) => (
-                <tr key={product.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 text-slate-900">{product.nombre}</td>
-                  <td className="px-4 py-3 text-slate-600">{product.marca}</td>
-                  <td className="px-4 py-3 text-slate-600">{product.categoria}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      {productosFiltrados.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-slate-500">
+          No hay productos para mostrar.
+        </p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {productosFiltrados.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
 
       <p className="text-sm text-slate-500">
         Mostrando {productosFiltrados.length} de {products.length} productos.

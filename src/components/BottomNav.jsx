@@ -4,7 +4,7 @@ const links = [
   { to: '/', label: 'Inicio', end: true },
   { to: '/inventario', label: 'Inventario' },
   { to: '/productos', label: 'Productos' },
-  { to: '/nosotros', label: 'Nosotros' },
+  { to: '/nosotres', label: 'Nosotres' },
   { to: '/faq', label: 'FAQ' },
 ]
 
