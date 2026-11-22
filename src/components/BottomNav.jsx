@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router'
 
 const links = [
   { to: '/', label: 'Inicio', end: true },

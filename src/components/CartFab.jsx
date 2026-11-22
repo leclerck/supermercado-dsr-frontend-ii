@@ -4,7 +4,7 @@
  * Se fija sobre el menú inferior y muestra un badge con el total de unidades.
  * Se oculta en la ruta `/carrito` para no tapar la página del carrito.
  */
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 import { useCart } from '../context/CartContext'
 
 export default function CartFab() {

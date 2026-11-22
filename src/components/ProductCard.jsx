@@ -6,7 +6,7 @@
  *
  * @param {{ product: { id: number, nombre: string, marca: string, categoria: string, precio: number, cantidad: number } }} props
  */
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 export default function ProductCard({ product }) {
   const sinStock = product.cantidad <= 0

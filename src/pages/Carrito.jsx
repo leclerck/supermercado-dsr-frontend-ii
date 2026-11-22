@@ -4,7 +4,7 @@
  * Permite ver los productos agregados, modificar cantidades (+/− o input)
  * y quitar ítems. Cada cambio sincroniza el stock del inventario vía CartContext.
  */
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useCart } from '../context/CartContext'
 
 export default function Carrito() {

@@ -5,7 +5,7 @@
  * para agregarla al carrito (restando stock del inventario).
  */
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router'
 import { useCart } from '../context/CartContext'
 import { useInventory } from '../context/InventoryContext'
 

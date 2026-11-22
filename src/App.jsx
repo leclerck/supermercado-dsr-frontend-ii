@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import BottomNav from './components/BottomNav'
 import CartFab from './components/CartFab'
 import { CartProvider } from './context/CartContext'
