@@ -6,6 +6,7 @@ export default function Productos() {
   const {
     products,
     form,
+    errors,
     editingId,
     handleChange,
     handleSubmit,
@@ -25,6 +26,7 @@ export default function Productos() {
 
       <ProductoForm
         form={form}
+        errors={errors}
         editingId={editingId}
         onChange={handleChange}
         onSubmit={handleSubmit}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useCart } from '../context/CartContext'
 import { useInventory } from '../context/InventoryContext'
+import { validateProductoForm } from '../utils/productoValidators'
 
 const emptyForm = {
   nombre: '',
@@ -14,40 +15,41 @@ export function useProductos() {
   const { products, addProduct, updateProduct, deleteProduct } = useInventory()
   const { purgeFromCart } = useCart()
   const [form, setForm] = useState(emptyForm)
+  const [errors, setErrors] = useState({})
   const [editingId, setEditingId] = useState(null)
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((prev) => ({ ...prev, [name]: value }))
+    setErrors((prev) => {
+      if (!prev[name]) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
   }
 
   const resetForm = () => {
     setForm(emptyForm)
+    setErrors({})
     setEditingId(null)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const nombre = form.nombre.trim()
-    const marca = form.marca.trim()
-    const categoria = form.categoria.trim()
-    const precio = Number(form.precio)
-    const cantidad = Number(form.cantidad)
-
-    if (!nombre || !marca || !categoria) {
-      return
-    }
-    if (Number.isNaN(precio) || precio < 0 || Number.isNaN(cantidad) || cantidad < 0) {
+    const nextErrors = validateProductoForm(form)
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors)
       return
     }
 
     const payload = {
-      nombre,
-      marca,
-      categoria,
-      precio,
-      cantidad: Math.floor(cantidad),
+      nombre: form.nombre.trim(),
+      marca: form.marca.trim(),
+      categoria: form.categoria.trim(),
+      precio: Number(form.precio),
+      cantidad: Math.floor(Number(form.cantidad)),
     }
 
     if (editingId !== null) {
@@ -61,6 +63,7 @@ export function useProductos() {
 
   const handleEdit = (product) => {
     setEditingId(product.id)
+    setErrors({})
     setForm({
       nombre: product.nombre,
       marca: product.marca,
@@ -81,6 +84,7 @@ export function useProductos() {
   return {
     products,
     form,
+    errors,
     editingId,
     handleChange,
     handleSubmit,
