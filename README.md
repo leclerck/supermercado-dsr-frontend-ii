@@ -43,7 +43,7 @@ El proyecto usa `base: '/supermercado-dsr-frontend-ii/'` en Vite y `basename` en
 | `/` | Página de inicio |
 | `/inventario` | Cards de productos con filtro por categoría y stock disponible |
 | `/producto/:id` | Detalle del producto y botón para agregar al carrito |
-| `/productos` | Formulario CRUD de productos |
+| `/productos` | CRUD de productos (formulario + tabla) |
 | `/carrito` | Lista del carrito; permite modificar cantidades |
 | `/nosotres` | Sucursales y datos de contacto |
 | `/faq` | Preguntas frecuentes |
@@ -60,6 +60,30 @@ Cada producto tiene:
 - `categoria` — categoría (por ejemplo Lácteos, Bebidas, Abarrotes)
 - `precio` — precio unitario
 - `cantidad` — stock disponible en inventario
+
+## CRUD de productos
+
+La página `/productos` separa UI y lógica:
+
+| Archivo | Rol |
+|---------|-----|
+| `src/pages/Productos.jsx` | Página que compone formulario y tabla |
+| `src/hooks/useProductos.js` | Estado del formulario, validación y handlers CRUD |
+| `src/components/ProductoForm.jsx` | Formulario de alta / edición |
+| `src/components/ProductosTable.jsx` | Tabla de productos con acciones Editar / Eliminar |
+
+### API de `useProductos()`
+
+| Valor / método | Descripción |
+|----------------|-------------|
+| `products` | Lista de productos del inventario |
+| `form` | Campos del formulario (`nombre`, `marca`, `categoria`, `precio`, `cantidad`) |
+| `editingId` | `id` en edición, o `null` si es alta |
+| `handleChange` | Actualiza un campo del formulario |
+| `handleSubmit` | Valida y crea o actualiza el producto |
+| `resetForm` | Limpia el formulario y sale del modo edición |
+| `handleEdit` | Carga un producto en el formulario |
+| `handleDelete` | Elimina el producto y lo limpia del carrito |
 
 ## Carrito y stock
 
@@ -106,8 +130,11 @@ src/
   components/BottomNav.jsx
   components/CartFab.jsx
   components/ProductCard.jsx
+  components/ProductoForm.jsx
+  components/ProductosTable.jsx
   context/InventoryContext.jsx
   context/CartContext.jsx
+  hooks/useProductos.js
   pages/Home.jsx
   pages/Inventario.jsx
   pages/ProductoDetalle.jsx
